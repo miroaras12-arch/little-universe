@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>İyi ki Doğdun Elif! 🎂</title>
+<style>
+:root{--pink:#4d9fff;--pink2:#d8ecff;--ink:#23476b;--cream:#f8fcff}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:var(--ink);background:radial-gradient(circle at 15% 15%,#fff 0 3%,transparent 4%),linear-gradient(145deg,#f7fbff,#dceeff);overflow-x:hidden}
+main{width:min(760px,92%);margin:32px auto;padding:clamp(18px,5vw,42px);background:#ffffffdf;border:2px solid white;border-radius:28px;box-shadow:0 18px 55px #4d8fd924;text-align:center;position:relative;z-index:1}
+.pill{display:inline-block;padding:7px 14px;border-radius:99px;background:#e4f2ff;font-size:.85rem;font-weight:700}
+h1{font-size:clamp(2.3rem,9vw,4.5rem);line-height:1.04;margin:18px 0 12px;color:#287bd1}
+.lead{font-size:1.08rem;line-height:1.7;max-width:560px;margin:0 auto}
+.cake{font-size:clamp(4rem,16vw,7rem);margin:12px 0;filter:drop-shadow(0 8px 7px #4d8fd920);animation:bob 2s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-8px) rotate(2deg)}}
+button{font:inherit;font-weight:750;border:0;border-radius:14px;padding:13px 18px;cursor:pointer;transition:transform .15s,filter .15s}
+button:hover{transform:translateY(-2px);filter:brightness(1.03)}
+button:focus-visible{outline:3px solid #2468c7;outline-offset:3px}
+.primary{background:var(--pink);color:white;box-shadow:0 6px 0 #287bd1}
+.secondary{background:#edf7ff;color:#245f9b;border:1px solid #b9dcff}
+.buttons{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin:22px 0}
+.panel{margin-top:24px;padding:22px;border-radius:22px;background:#f0f8ff;border:1px solid #cce5ff}
+.panel h2{margin:0 0 8px}
+.hidden{display:none!important}
+#message{font-size:1.05rem;line-height:1.7}
+.game-area{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;max-width:360px;margin:18px auto}
+.tile{aspect-ratio:1;background:white;border:2px solid #b9dcff;font-size:clamp(1.8rem,7vw,2.6rem);padding:0;box-shadow:0 4px 0 #a7d1ff}
+.tile:disabled{cursor:default;opacity:.85}
+#gameStatus{font-weight:700;min-height:1.7em}
+footer{font-size:.85rem;opacity:.7;margin-top:24px}
+.confetti{position:fixed;top:-15px;width:9px;height:14px;z-index:5;pointer-events:none;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(760deg);opacity:.2}}
+.sparkle{color:#4d9fff}
+.memory-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;max-width:420px;margin:18px auto}
+.memory-card{aspect-ratio:1;background:#fff;border:2px solid #b9dcff;border-radius:14px;font-size:clamp(1.5rem,6vw,2.2rem);padding:0;box-shadow:0 4px 0 #a7d1ff}
+.memory-card.matched{background:#e8f5ff;border-color:#7cbcff;cursor:default}
+.star-hud{display:flex;justify-content:space-between;max-width:520px;margin:12px auto 8px;font-weight:700}
+.star-field{height:220px;position:relative;overflow:hidden;border:2px dashed #9dcaff;border-radius:18px;background:linear-gradient(135deg,#fff,#edf7ff)}
+.star-hint{position:absolute;inset:0;display:grid;place-items:center;padding:12px;color:#4779a8}
+.star-target{position:absolute;padding:0;background:transparent;border:0;font-size:2rem;box-shadow:none;line-height:1}
+@media(max-width:420px){.memory-grid{gap:6px}.memory-card{border-radius:10px}.star-field{height:190px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<main>
+  <span class="pill">🎀 BUGÜN ELİF'İN GÜNÜ 🎀</span>
+  <div class="cake" aria-hidden="true">🎂</div>
+  <h1>İyi ki doğdun,<br>Elif!</h1>
+  <p class="lead">Yeni yaşın bol kahkahalı, güzel sürprizli ve unutulmaz anılarla dolu olsun! Her gün yüzünü güldüren bir şeyler bulman dileğiyle. 🩷</p>
+  <div class="buttons">
+    <button class="primary" id="celebrate">🎉 Kutlamayı başlat!</button>
+    <button class="secondary" id="openMessage">💌 Mesajı aç</button>
+  </div>
+  <section id="message" class="panel hidden" aria-live="polite">
+    <h2>Elif'e küçük bir not 💗</h2>
+    <p>İyi ki varsın Elif! Yeni yaşında bol bol eğlen, hayallerinin peşinden git ve kendin gibi harika kal. Bugün bol pasta, bol gülümseme ve sıfır sıkıntı seninle olsun! 🧁✨</p>
+  </section>
+  <section class="panel" aria-labelledby="gameTitle">
+    <h2 id="gameTitle">🧁 Mini oyun: Pastayı bul!</h2>
+    <p>Üç kutudan birine gizlenmiş pastayı bul. Bakalım kaç denemede bulacaksın?</p>
+    <div class="game-area" id="gameArea">
+      <button class="tile" data-index="0" aria-label="1 numaralı kutu">🎁</button>
+      <button class="tile" data-index="1" aria-label="2 numaralı kutu">🎁</button>
+      <button class="tile" data-index="2" aria-label="3 numaralı kutu">🎁</button>
+    </div>
+    <p id="gameStatus" aria-live="polite">Bir kutu seç bakalım! 👀</p>
+    <button class="secondary" id="restart">🔄 Yeniden oyna</button>
+  </section>
+  <section class="panel" aria-labelledby="memoryTitle">
+    <h2 id="memoryTitle">🧠 Mini oyun 2: Eşleşenleri bul!</h2>
+    <p>Aynı iki emojiyi bulmak için kartlara dokun.</p>
+    <div class="memory-grid" id="memoryGrid"></div>
+    <p id="memoryStatus" aria-live="polite">Hazırsan başlayalım! ✨</p>
+    <button class="secondary" id="memoryRestart">🔄 Kartları karıştır</button>
+  </section>
+
+  <section class="panel" aria-labelledby="starTitle">
+    <h2 id="starTitle">⭐ Mini oyun 3: Yıldız avı</h2>
+    <p>15 saniye içinde mümkün olduğunca çok yıldıza tıkla!</p>
+    <div class="star-hud"><span>Süre: <b id="starTime">15</b>s</span><span>Puan: <b id="starScore">0</b></span></div>
+    <div id="starField" class="star-field"><span class="star-hint">Başlat'a bas ve yıldızları yakala!</span></div>
+    <div class="buttons"><button class="primary" id="starStart">▶ Oyunu başlat</button></div>
+    <p id="starStatus" aria-live="polite">Rekorunu kırabilecek misin? 🌟</p>
+  </section>
+</main>
+<script>
+const $ = (s) => document.querySelector(s);
+let cakeIndex = Math.floor(Math.random()*3);
+let attempts = 0, finished = false;
+function confetti(count=100){
+  const colors=['#4d9fff','#ffc857','#a7e8bd','#b8b8ff','#9dcaff','#ffffff'];
+  for(let i=0;i<count;i++){
+    const piece=document.createElement('i');
+    piece.className='confetti';
+    piece.style.left=Math.random()*100+'vw';
+    piece.style.background=colors[Math.floor(Math.random()*colors.length)];
+    piece.style.borderRadius=Math.random()>.5?'50%':'2px';
+    piece.style.animationDuration=(2.3+Math.random()*2.5)+'s';
+    piece.style.animationDelay=(Math.random()*.7)+'s';
+    piece.style.transform=`rotate(${Math.random()*360}deg)`;
+    document.body.appendChild(piece);
+    piece.addEventListener('animationend',()=>piece.remove());
+  }
+}
+$('#celebrate').addEventListener('click',()=>{confetti(150);$('#message').classList.remove('hidden');$('#message').scrollIntoView({behavior:'smooth',block:'nearest'});});
+$('#openMessage').addEventListener('click',()=>{$('#message').classList.toggle('hidden');if(!$('#message').classList.contains('hidden'))$('#message').scrollIntoView({behavior:'smooth',block:'nearest'});});
+function resetGame(){
+  cakeIndex=Math.floor(Math.random()*3);attempts=0;finished=false;
+  document.querySelectorAll('.tile').forEach(b=>{b.textContent='🎁';b.disabled=false;});
+  $('#gameStatus').textContent='Bir kutu seç bakalım! 👀';
+}
+document.querySelectorAll('.tile').forEach(btn=>btn.addEventListener('click',()=>{
+  if(finished)return;
+  attempts++;
+  const i=Number(btn.dataset.index);
+  if(i===cakeIndex){
+    btn.textContent='🎂';finished=true;
+    document.querySelectorAll('.tile').forEach(b=>b.disabled=true);
+    $('#gameStatus').textContent=`BULDUN! 🎉 ${attempts} denemede pastayı buldun. İyi ki doğdun Elif!`;
+    confetti(90);
+  }else{
+    btn.textContent='🌸';btn.disabled=true;
+    $('#gameStatus').textContent='Bu kutuda pasta yok! Bir tane daha dene. 💪';
+    if(document.querySelectorAll('.tile:not(:disabled)').length===0){
+      document.querySelectorAll('.tile').forEach((b,j)=>{if(j===cakeIndex)b.textContent='🎂';});
+      finished=true;
+      $('#gameStatus').textContent='Bu sefer olmadı ama pasta ortaya çıktı! 🔄 Yeniden oynayabilirsin.';
+    }
+  }
+}));
+$('#restart').addEventListener('click',resetGame);
+
+// Emoji memory matching game
+const memoryEmojis=['🎂','🎈','🧁','🌸','🎁','⭐','🍓','🎉'];
+let firstCard=null, lockCards=false, matchedPairs=0, memoryMoves=0;
+function setupMemory(){
+  const deck=[...memoryEmojis,...memoryEmojis].sort(()=>Math.random()-.5);
+  const grid=$('#memoryGrid'); grid.innerHTML='';
+  firstCard=null;lockCards=false;matchedPairs=0;memoryMoves=0;
+  $('#memoryStatus').textContent='Eşleşmeleri bulmak için kartları aç!';
+  deck.forEach((emoji,index)=>{
+    const card=document.createElement('button');
+    card.className='memory-card';card.textContent='❔';card.dataset.emoji=emoji;
+    card.setAttribute('aria-label',`Kapalı kart ${index+1}`);
+    card.addEventListener('click',()=>{
+      if(lockCards||card.classList.contains('matched')||card===firstCard)return;
+      card.textContent=emoji;
+      if(!firstCard){firstCard=card;return;}
+      memoryMoves++;
+      if(firstCard.dataset.emoji===card.dataset.emoji){
+        firstCard.classList.add('matched');card.classList.add('matched');
+        firstCard=null;matchedPairs++;
+        if(matchedPairs===memoryEmojis.length){$('#memoryStatus').textContent=`Muhteşem! ${memoryMoves} hamlede hepsini buldun! 🏆`;confetti(45);}
+        else $('#memoryStatus').textContent=`Eşleşme buldun! ${matchedPairs}/${memoryEmojis.length}`;
+      }else{
+        lockCards=true;const previous=firstCard;firstCard=null;
+        $('#memoryStatus').textContent='Bu ikisi eşleşmedi, tekrar dene! 😊';
+        setTimeout(()=>{previous.textContent='❔';card.textContent='❔';lockCards=false;},650);
+      }
+    });
+    grid.appendChild(card);
+  });
+}
+$('#memoryRestart').addEventListener('click',setupMemory);setupMemory();
+
+// 15-second star-catching game
+let starTicker=null, starRemaining=15, starPoints=0, starRunning=false;
+function finishStars(){
+  starRunning=false;clearInterval(starTicker);
+  $('#starField').innerHTML='<span class="star-hint">Oyun bitti! Tekrar oynamak için başlat. 🌟</span>';
+  $('#starStatus').textContent=`Süre bitti! ${starPoints} yıldız yakaladın. ${starPoints>=10?'Harika refleksler! 🏆':'Bir tur daha deneyebilirsin!'}`;
+  if(starPoints>=10)confetti(35);
+}
+function spawnStar(){
+  const field=$('#starField');field.innerHTML='';
+  const star=document.createElement('button');star.className='star-target';star.textContent='⭐';
+  star.setAttribute('aria-label','Yıldızı yakala');
+  star.style.left=(4+Math.random()*82)+'%';star.style.top=(5+Math.random()*70)+'%';
+  star.addEventListener('click',()=>{
+    if(!starRunning)return;
+    starPoints++;$('#starScore').textContent=starPoints;spawnStar();
+  });
+  field.appendChild(star);
+}
+$('#starStart').addEventListener('click',()=>{
+  clearInterval(starTicker);starRemaining=15;starPoints=0;starRunning=true;
+  $('#starTime').textContent=starRemaining;$('#starScore').textContent=starPoints;
+  $('#starStatus').textContent='Yıldızlara hızlıca tıkla! ⭐';spawnStar();
+  starTicker=setInterval(()=>{
+    starRemaining--;$('#starTime').textContent=starRemaining;
+    if(starRemaining<=0)finishStars();
+  },1000);
+});
+</script>
+</body>
+</html>
